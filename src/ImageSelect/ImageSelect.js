@@ -14,10 +14,13 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
+import { InputNumber } from 'primereact/inputnumber';
 
+import Croped from './Croped/Croped'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { decrement, increment } from '../state'
+import { set } from 'react-hook-form';
 
 /*const Store = () => {
   const count = useSelector((state) => state.counter.value)
@@ -46,14 +49,22 @@ import { decrement, increment } from '../state'
 
 
 function ImageSelect() {
-  const [totalSize, setTotalSize] = useState(0);
+    const [totalSize, setTotalSize] = useState(0);
     const toast = useRef(null);
     const fileUploadRef = useRef(null);
 
+
+    const [value1, setValue1] = useState(10);
+    const [value2, setValue2] = useState(15);
+    const [imagesCroped, setImagesCroped] = useState([])
+    // const [imagesCroped, setImgCroped] = useState([])
+    const [sizeCroped, setSizeCroped] = useState({ width: 0, height: 0 })
+
+
     const onUpload = () => {
         console.log(toast)
-        toast.current.show({severity: 'info', summary: 'Success', detail: 'File Uploaded'});
-        console.log(toast.current.show({severity: 'info', summary: 'Success', detail: 'File Uploaded'}))
+        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+        console.log(toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' }))
     }
 
     const onTemplateSelect = (e) => {
@@ -72,7 +83,7 @@ function ImageSelect() {
         });
 
         setTotalSize(_totalSize);
-        toast.current.show({severity: 'info', summary: 'Success', detail: 'File Uploaded'});
+        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     }
 
     const onTemplateRemove = (file, callback) => {
@@ -85,24 +96,24 @@ function ImageSelect() {
     }
 
     const onBasicUpload = () => {
-        toast.current.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Basic Mode'});
+        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Basic Mode' });
     }
 
     const onBasicUploadAuto = () => {
-        toast.current.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
+        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode' });
     }
 
     const headerTemplate = (options) => {
         const { className, chooseButton, uploadButton, cancelButton } = options;
-        const value = totalSize/10000;
+        const value = totalSize / 10000;
         const formatedValue = fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B';
 
         return (
-            <div className={className} style={{backgroundColor: 'transparent', display: 'flex', alignItems: 'center'}}>
+            <div className={className} style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}>
                 {chooseButton}
                 {uploadButton}
                 {cancelButton}
-                <ProgressBar value={value} displayValueTemplate={() => `${formatedValue} / 1 MB`} style={{width: '300px', height: '20px', marginLeft: 'auto'}}></ProgressBar>
+                <ProgressBar value={value} displayValueTemplate={() => `${formatedValue} / 1 MB`} style={{ width: '300px', height: '20px', marginLeft: 'auto' }}></ProgressBar>
             </div>
         );
     }
@@ -110,7 +121,7 @@ function ImageSelect() {
     const itemTemplate = (file, props) => {
         return (
             <div className="flex align-items-center flex-wrap">
-                <div className="flex align-items-center" style={{width: '40%'}}>
+                <div className="flex align-items-center" style={{ width: '40%' }}>
                     <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
                     <span className="flex flex-column text-left ml-3">
                         {file.name}
@@ -126,8 +137,8 @@ function ImageSelect() {
     const emptyTemplate = () => {
         return (
             <div className="flex align-items-center flex-column">
-                <i className="pi pi-image mt-3 p-5" style={{'fontSize': '5em', borderRadius: '50%', backgroundColor: 'var(--surface-b)', color: 'var(--surface-d)'}}></i>
-                <span style={{'fontSize': '1.2em', color: 'var(--text-color-secondary)'}} className="my-5">Drag and Drop Image Here</span>
+                <i className="pi pi-image mt-3 p-5" style={{ 'fontSize': '5em', borderRadius: '50%', backgroundColor: 'var(--surface-b)', color: 'var(--surface-d)' }}></i>
+                <span style={{ 'fontSize': '1.2em', color: 'var(--text-color-secondary)' }} className="my-5">Drag and Drop Image Here</span>
             </div>
         )
     }
@@ -144,118 +155,209 @@ function ImageSelect() {
         }
     }
 
-    const chooseOptions = {icon: 'pi pi-fw pi-images', iconOnly: false, className: 'custom-choose-btn p-button-rounded p-button-outlined'};
-    const uploadOptions = {icon: 'pi pi-fw pi-cloud-upload', iconOnly: true, className: 'custom-upload-btn p-button-success p-button-rounded p-button-outlined'};
-    const cancelOptions = {icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined'};
+    const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: false, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
+    const uploadOptions = { icon: 'pi pi-fw pi-cloud-upload', iconOnly: true, className: 'custom-upload-btn p-button-success p-button-rounded p-button-outlined' };
+    const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
     ////////
-    // let src = "";
-    let [cropped, error] = useSmartcrop({ src }, { width: 200, height: 300, minScale: 1.0 });
-    // if (error) {
-    //     console.error(error);
-    // }
 
-    const myUploader = (event, file) => {
+    const [images, setImages] = useState([])
+    const [imagesURLs, setImagesURLs] = useState([])
+
+
+    function imageSize(src, file) {
+        const img = document.createElement("img");
+
+        const promise = new Promise((resolve, reject) => {
+            img.onload = () => {
+                // Natural size is the actual image size regardless of rendering.
+                // The 'normal' `width`/`height` are for the **rendered** size.
+                const width = img.naturalWidth;
+                const height = img.naturalHeight;
+
+                // Resolve promise with the width and height
+                resolve({ width, height });
+            };
+
+            // Reject promise on error
+            img.onerror = reject;
+        });
+
+        // Setting the source makes it start downloading and eventually call `onload`
+        img.src = src;
+        let fileCroped = {}
+        let sizeCroped = {}
+        let newImagesCroped = []
+
+        function converter(size, file) {
+            //1cm = 37.938105 px
+            let orientation = size.width > size.height ? "gorizontal" : "vertical"
+            console.log("orientation: ", orientation)
+
+            let ratioInput = Math.max(value1, value2) / Math.min(value1, value2)
+            console.log("ratio input: ", ratioInput)
+            let ratioPhoto = Math.max(size.width, size.height) / Math.min(size.width, size.height)
+            console.log("ratio photo: ", ratioPhoto)
+            let minSizeCrop = Math.max(size.width, size.height) / ratioInput
+            console.log("Min size crop: ", minSizeCrop)
+            let maxSizeCrop = Math.max(size.width, size.height)
+            console.log("Max size crop: ", maxSizeCrop)
+
+            console.log("width, px: ", size.width)
+            console.log("height, px: ", size.height)
+
+            // console.log("w/h: ", size.width/size.height)
+
+            // console.log("width, cm: ", size.width/37.938105)
+            // console.log("height, cm: ", size.height/37.938105)
+            if (orientation == "gorizontal") {
+                sizeCroped = { width: maxSizeCrop, height: minSizeCrop }
+            }
+            else {
+                sizeCroped = { width: minSizeCrop, height: maxSizeCrop }
+            }
+            fileCroped = {
+                image: file,
+                width: sizeCroped.width,
+                height: sizeCroped.height
+            }
+            console.log("fileCroped", fileCroped)
+
+            newImagesCroped.push(fileCroped)
+            console.log("newImagesCroped!!!!", newImagesCroped)
+            setImagesCroped(newImagesCroped)
+        }
+
+        promise.then(value => converter(value, file))
+    }
+
+
+
+    const myUploader = (event) => {
         //event.files == files to upload
-        // console.log(event.files)
-        event.files.forEach((file)=>{
+        console.log(event.files)
+
+        event.files.forEach((file) => {
+            //setSrc(file.objectURL)
             let src = file.objectURL
-            // let [cropped, error] = useSmartcrop({ src }, { width: 200, height: 300, minScale: 1.0 });
-            if (error) {
-                console.error(error);
-            }
 
-            let text = JSON.stringify(cropped);
-            downloadAsFile(text);
-        
-            function downloadAsFile(data) {
-                let a = document.createElement("a");
-                let file = new Blob([data], {type: 'application/json'});
-                a.href = URL.createObjectURL(file);
-                a.download = "example.txt";
-                a.click();
-            }
+            //console.log("cropped", cropped)
 
-            // const formData = require('form-data');
-            // const Mailgun = require('mailgun.js');
-            // const mailgun = new Mailgun(formData);
-            // const mg = mailgun.client({
-            //     username: 'api',
-            //     key: '81b8f2b864bb278ea9949cef2acf4de4-102c75d8-8682f0e1',
-            // });
-            // mg.messages
-            //     .create(sandbox6b2063c137a24d1889717efb709b92b4.mailgun.org, {
-            //         from: "Mailgun Sandbox <postmaster@sandbox6b2063c137a24d1889717efb709b92b4.mailgun.org>",
-            //         to: ["timur.ratseev@gmail.com"],
-            //         subject: "Hello",
-            //         text: "Testing some Mailgun awesomness!",
-            //     })
-            //     .then(msg => console.log(msg)) // logs response data
-            //     .catch(err => console.log(err)); // logs any error`;
+            // var link = document.createElement('a');
+            // link.href = cropped
+            // link.download = 'Download.jpg';
+            // document.body.appendChild(link);
+            // link.click();
+            // document.body.removeChild(link);
 
-            
+            // <Croped url={src}/>
 
+            //setImagesCroped(event.files)
 
-            // You can see a record of this email in your logs: https://app.mailgun.com/app/logs.
-
-            // You can send up to 300 emails/day from this sandbox server.
-            // Next, you should add your own domain so you can send 10000 emails/month for free.
-
+            imageSize(src, file)
 
         })
 
+        function imgsCrops() {
+            console.log("imagesCroped", imagesCroped)
+        }
+
+        setTimeout(imgsCrops, 1000)
     }
-    /////////
 
-    // let file = "Hallo"
-    // let email = "rtimsh@yandex.ru"
+    const ImagesCropedList = () => {
 
-    // const sendFileByEmail = (file, email) => {
-    //     // create a new XMLHttpRequest object
-    //     var xhr = new XMLHttpRequest();
+        let src = ''
+        // let [cropped, error] = useSmartcrop({ src }, { width: 200, height: 200, minScale: 1.0 });
+        // if (error) {
+        //     console.error(error);
+        // }
+        const { hookFunction } = useSmartcrop({ src }, { width: 200, height: 200, minScale: 1.0 });
+        const { hookFunctionRef, setHookFunctionRef } = useRef(hookFunction)
+
+        useEffect(()=>{
+            console.log("imagesCroped!!!!!", imagesCroped)
+            console.log("hookFunctionRef", hookFunctionRef)
+        }, [imagesCroped])
+
+        // return (
+        //     <>
+        //         {imagesCroped.map(img => {
+        //             // let [src, setSrc] = useState('');
+        //             let src = img.image.objectURL
+        //             console.log("src imgCrop: ", src)
+        //             // setHookFunctionRef({ src }, { width: img.width, height: img.height, minScale: 1.0 })
+
+        //             return (
+        //                 <React.Fragment>
+        //                     <img key={img} style={{ width: "200px" }} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEga68fN6PGUKOKk4EhcQ33n3dYMLxvrR76ZQChFZMsmSnFp1bp7ePyL0VJCa9vkwy_2s&usqp=CAUg" />
+        //                 </React.Fragment>
+        //             )
+        //         })}
+        //         {/* {imagesURLs.map(imageSrc => <img src={cropped} />)} */}
+        //     </>
+        // )
+
+        /////////////////////!!!/////
         
-    //     // set the request method and URL
-    //     xhr.open('POST', '/send-file', true);
-        
-    //     // set the content type header
-    //     xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-        
-    //     // create a new FormData object
-    //     var formData = new FormData();
-        
-    //     // append the file and email to the form data
-    //     formData.append('file', file);
-    //     formData.append('email', email);
-        
-    //     // send the form data
-    //     xhr.send(formData);
-    // }
+        const cropphoto = imagesCroped.map((element, index) => {
+            console.log("element.file", element.file)
+           return (
+           <img key={index} style={{ width: "200px" }} 
+           src={element.file} />)
+        });
+     
+        return (
+        <div>
+            <p>123</p>
+           {cropphoto}
+          
+        </div>)
 
-  return (
-    <div className="ImageSelect">
-      <Toast ref={toast}></Toast>
+    }
+    const MemoizedChildComponent = React.memo(ImagesCropedList);
 
-      <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
-      <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
-      <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-      <div className="card">
-          <h5>Advanced</h5>
-          <FileUpload name="demo[]" /*url="./send.php" onUpload={onUpload}*/ multiple accept="image/*" maxFileSize={30000000}
-              emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} 
-              chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions}
-              customUpload uploadHandler={myUploader}/>
+    return (
+        <div className="ImageSelect">
 
-        {cropped && <img src={cropped} />}
+            <div className="grid">
+                <div className="field col-12 md:col-3">
+                    <label htmlFor="vertical" style={{ display: 'block' }}>Соотношение</label>
+                    <div style={{ display: "flex", textAlign: "center" }}>
+                        <InputNumber inputId="vertical" value={value1} onValueChange={(e) => setValue1(e.value)} mode="decimal" showButtons buttonLayout="vertical" style={{ width: '4rem' }}
+                            decrementButtonClassName="p-button-secondary" incrementButtonClassName="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" />
 
-        {/* <button onClick={()=>{sendFileByEmail(file, email)}}>aaaaaaa</button> */}
+                        <InputNumber inputId="vertical" value={value2} onValueChange={(e) => setValue2(e.value)} mode="decimal" showButtons buttonLayout="vertical" style={{ width: '4rem' }}
+                            decrementButtonClassName="p-button-secondary" incrementButtonClassName="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" />
+                    </div>
+                </div>
+            </div>
 
-          {/* <h5>Template</h5>
+            <Toast ref={toast}></Toast>
+
+            <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
+            <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
+            <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
+
+            <div className="card">
+                <h5>Advanced</h5>
+                <FileUpload name="demo[]" /*url="./send.php" onUpload={onUpload}*/ multiple accept="image/*" maxFileSize={30000000}
+                    emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>}
+                    chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions}
+                    customUpload uploadHandler={myUploader} />
+
+                {/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEga68fN6PGUKOKk4EhcQ33n3dYMLxvrR76ZQChFZMsmSnFp1bp7ePyL0VJCa9vkwy_2s&usqp=CAUg"/> */}
+                {/* {cropped && <img src={cropped} />} */}
+
+                {/* <button onClick={()=>{sendFileByEmail(file, email)}}>aaaaaaa</button> */}
+
+                {/* <h5>Template</h5>
           <FileUpload ref={fileUploadRef} name="demo[]" url="https://primefaces.org/primereact/showcase/    " multiple accept="image/*" maxFileSize={30000000}
               onUpload={onTemplateUpload} onSelect={onTemplateSelect} onError={onTemplateClear} onClear={onTemplateClear}
               headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
               chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions} /> */}
 
-          {/* <h5>Basic</h5>
+                {/* <h5>Basic</h5>
           <FileUpload mode="basic" name="demo[]" url="https://primefaces.org/primereact/showcase/upload.php" accept="image/*" maxFileSize={1000000} onUpload={onBasicUpload} />
 
           <h5>Basic with Auto</h5>
@@ -263,9 +365,11 @@ function ImageSelect() {
 
           <h5>Custom (base64 encoded)</h5>
           <FileUpload mode="basic" name="demo[]" url="https://primefaces.org/primereact/showcase/upload.php" accept="image/*" customUpload uploadHandler={customBase64Uploader} /> */}
-      </div>
-    </div>
-  );
+            </div>
+            
+            <MemoizedChildComponent imagesCroped={imagesCroped} />
+        </div>
+    );
 }
 
 export default ImageSelect;
