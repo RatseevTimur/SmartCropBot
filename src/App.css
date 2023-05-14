@@ -1,8 +1,9 @@
 .App {
   text-align: center;
+  padding: 10px;
 }
 
-.App-logo {
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -35,4 +36,18 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+.logo-ai{
+  /* position: absolute; */
+  width: 200px;
+  height: 200px;
+  background: url("../public/logoAI.png");
+  background-position: center;
+  background-repeat: "no-repeat";
+  background-size: 103%;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }

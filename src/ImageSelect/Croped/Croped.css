@@ -1,0 +1,17 @@
+.crop-item{
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.crop-item:hover{
+    /* border: solid; */
+    box-shadow: 1px 1px 6px rgba(46, 46, 46, 0.733);
+}
+
+.crop-item a{
+    color: black;
+    position: relative;
+    right: 12px;
+    background-color: rgb(255, 255, 255);
+}
