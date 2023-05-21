@@ -4,10 +4,16 @@
 Стараясь разместить точки фокуса по принципу золотого сечения.
 
 Загрузим исодники:
-![2018-10-06_0019](https://github.com/RatseevTimur/SmartCropBot/assets/95998454/f79bbbbe-b5ac-4db5-b914-2f3134f97069)
-![64074dc25973f](https://github.com/RatseevTimur/SmartCropBot/assets/95998454/5c68a7bd-4a16-426f-b823-2f80d0a48bf2)
-![image-asset](https://github.com/RatseevTimur/SmartCropBot/assets/95998454/f55e7909-3d96-4ea7-ae42-f68e086f5f2e)
 
+<div align="center">
+  <div style="display: flex;">
+    
+    <img src="https://github.com/RatseevTimur/SmartCropBot/assets/95998454/f79bbbbe-b5ac-4db5-b914-2f3134f97069"/>
+    <img src="https://github.com/RatseevTimur/SmartCropBot/assets/95998454/5c68a7bd-4a16-426f-b823-2f80d0a48bf2"/>
+    <img src="https://github.com/RatseevTimur/SmartCropBot/assets/95998454/f55e7909-3d96-4ea7-ae42-f68e086f5f2e"/>
+    
+  </div>
+</div>
 
 <img width="484" alt="Снимок экрана 2023-05-21 в 23 07 28" src="https://github.com/RatseevTimur/SmartCropBot/assets/95998454/020da9e9-991a-4eb3-ae13-c3d85ca328cc">
 
