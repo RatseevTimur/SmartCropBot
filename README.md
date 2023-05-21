@@ -1,6 +1,12 @@
-# Getting Started with Create React App
+# Умная обрезка
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Приложение определяет важные объекты на фото и орезает под заданный размер не теряя важных элементов.
+Стараясь разместить точки фокуса по принципу золотого сечения.
+
+<img width="484" alt="Снимок экрана 2023-05-21 в 23 07 28" src="https://github.com/RatseevTimur/SmartCropBot/assets/95998454/020da9e9-991a-4eb3-ae13-c3d85ca328cc">
+
+<img width="1436" alt="Снимок экрана 2023-05-21 в 23 08 25" src="https://github.com/RatseevTimur/SmartCropBot/assets/95998454/c25fa149-5d0b-4090-acb2-b3074a7cdb0f">
+
 
 ## Available Scripts
 
