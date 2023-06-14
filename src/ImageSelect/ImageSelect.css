@@ -8,6 +8,11 @@
 }
 
 .image-list-item{
+  position: relative;
   width: 200px;
   height: 200px;
+}
+
+.card{
+  margin-bottom: 10px;
 }

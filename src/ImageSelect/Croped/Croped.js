@@ -3,7 +3,6 @@ import { useSmartcrop, SmartcropStatus } from "use-smartcrop";
 import { saveAs } from 'file-saver'
 
 import { Button } from 'primereact/button';
-import 'primeicons/primeicons.css'
 
 import "./Croped.css"
 
@@ -79,11 +78,12 @@ function Croped({ url, width, height, id }) {
 
     return (
         <div className="crop-item">
-            {cropped && <img src={cropped} style={{width: "200px"}}/>}
+            {cropped && <img src={cropped} style={{width: "100%"}}/>}
 
-            <Button  label="Загрузить" icon="pi 
-                pi-download" size="small"
-                onClick={() => saveAs(cropped, 'image.jpg')}/>
+            <Button icon="pi pi-download" size="small"
+                className="button-dowland"
+                onClick={() => saveAs(cropped, 'image.jpg')}
+                tooltip="Скачать ЭТО фото" tooltipOptions={{ position: 'bottom', mouseTrack: true, mouseTrackTop: 15 }}/>
 
             {/* <a id={id} href="#" data-href={cropped} download
                 className="pi-download"></a> */}

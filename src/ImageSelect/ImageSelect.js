@@ -12,13 +12,14 @@ import { InputNumber } from 'primereact/inputnumber';
 
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import { saveAs } from 'file-saver'
 
 import Croped from './Croped/Croped'
 
 
 function ImageSelect() {
     const toast = useRef(null);
-    const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: false, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
+    const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: false, className: 'custom-choose-btn p-button-rounded p-button-outlined' , label: "Загрузить"};
     const uploadOptions = { icon: 'pi pi-fw pi-cloud-upload', iconOnly: true, className: 'custom-upload-btn p-button-success p-button-rounded p-button-outlined' };
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
     ////////
@@ -106,7 +107,10 @@ function ImageSelect() {
 
         // // setTimeout(imgsCrops, 1000)
         // console.log("imagesCroped", imagesCroped)
-        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+        toast.current.show({ severity: 'info', summary: 'Обработка прошла', detail: 'Фото обрезаны' });
+
+        let elem = document.getElementById("dowland-all")
+        elem.scrollIntoView()
     }
 
     ////
@@ -133,20 +137,40 @@ function ImageSelect() {
     const ImagesCropedList = () => {
 
         document.getElementById("ImageListItem")
+
+        console.log("imagesCroped", imagesCroped)
+
+        function dowlandAll(imagesCroped){
+            imagesCroped.forEach((item)=>{
+                saveAs(item.image, `${item.image.name}`)
+            })
+        }
         
         return (
-        
-            <ImageList sx={{ width: "100%", height: 500 }} cols={3} rowHeight={164}>
-                {imagesCroped.map((element, index) => (
-                    <ImageListItem id="ImageListItem" key={index} className='image-list-item'>
+            <>  
+                
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                {imagesCroped.length>0 ? <p>Результат (обрезанные фото) &darr;</p>:<p>Внизу появятся обрезанные фото &darr;</p>}
+                    <Button label="Скачать все!" id="dowland-all" icon="pi pi-download"
+                    onClick={()=>dowlandAll(imagesCroped)} disabled={imagesCroped.length === 0}
+                    tooltip={`Скачать ВСЕ обрезанные фото (${imagesCroped.length} шт.)`} tooltipOptions={{ position: 'bottom', mouseTrack: true, mouseTrackTop: 15 }}/>
+                </div>
+                
+               
+                
+                
+                <ImageList sx={{ width: "100%", height: 450 }} cols={4} rowHeight={121} variant="quilted">
+                    {imagesCroped.map((element, index) => (
                     
-                        <Croped url={element.image.objectURL} width={element.width} height={element.height}
-                            id={index}/>
+                    //    <ImageListItem key={index} cols={element.width>element.height? 2 : 1} 
+                    //     rows={element.width>element.height? 1 : 2}>
+                            <Croped url={element.image.objectURL} width={element.width} height={element.height}
+                                id={index}/>
 
-                    </ImageListItem>
-                ))}
-            </ImageList>
-            
+                        // </ImageListItem>
+                    ))}
+                </ImageList>
+            </>
         )
 
     }
@@ -169,9 +193,9 @@ function ImageSelect() {
 
             <Toast ref={toast}></Toast>
 
-            <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
-            <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
-            <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
+            <Tooltip target=".custom-choose-btn" content="Загрузить исходники" position="bottom" />
+            <Tooltip target=".custom-upload-btn" content="Обрезать загруженные" position="bottom" />
+            <Tooltip target=".custom-cancel-btn" content="Очистить список" position="bottom" />
 
             <div className="card">
                 <h5>Умная обрезка</h5>
